@@ -25,3 +25,13 @@
 .loader div:nth-child(3) {
   animation-delay: 0.4s;
 }
+
+.animate {
+  animation: spin 1s linear infinite;
+  width: 40px;
+  height: 40px;
+  border-color: orange;
+  border-width: 3px;
+  border-top: gray;
+  border-radius: 100%;
+}

@@ -1,6 +1,7 @@
 import Stripe from 'stripe'
 import Transaction from '../models/Transaction.js'
 import User from '../models/User.js'
+import { Purchase } from '../models/Purchase.js'
 export const stripeWebhooks = async (request, response) => {
     const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
     const sig = request.headers['stripe-signature']
@@ -23,7 +24,17 @@ export const stripeWebhooks = async (request, response) => {
                     const transaction = await Transaction.findOne({ _id: transactionId, isPaid: false })
                     await User.updateOne({ _id: transaction.userId }, { $inc: { credits: transaction.credits } })
                     transaction.isPaid = true
-                     await transaction.save()
+                    await transaction.save()
+                           const purchaseData = await Purchase.findById('6aeb8eea68d5597ad9b5ba7d')
+            
+            
+            
+            
+            
+            
+            
+            purchaseData.status = 'completed'
+            await purchaseData.save()
                 } else {
                     return response.json({received:true, message:'ignored event invalid app'})
                 }
