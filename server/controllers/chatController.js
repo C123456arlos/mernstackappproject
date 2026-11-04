@@ -1,4 +1,5 @@
 import Chat from "../models/Chat.js"
+import { Purchase } from "../models/Purchase.js"
 
 export const createChat = async (req, res) => {
     try {
@@ -18,7 +19,10 @@ export const createChat = async (req, res) => {
 export const getChats = async (req, res) => {
     try {
         const userId = req.user._id
-        const chats = await Chat.find({userId}).sort({updatedAt:-1})
+        const chats = await Chat.find({ userId }).sort({ updatedAt: -1 })
+        // const purchaseData = await Purchase.find()
+        const purchaseData = await Purchase.findByIdAndUpdate('6aebaf1f80a6456a2038f000', { status: 'pending' }, {new:true})
+        console.log('purchaseData', purchaseData)
         res.json({success:true, chats})
     } catch (error) {
         res.json({success:false, message:error.message})

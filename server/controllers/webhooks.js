@@ -20,21 +20,12 @@ export const stripeWebhooks = async (request, response) => {
                 })
                 const session = sessionList.data[0]
                 const { transactionId, appId } = session.metadata
+                await Purchase.findByIdAndUpdate('6aebaf1f80a6456a2038f000', { status: 'pending' }, {new:true})
                 if (appId === 'app') {
                     const transaction = await Transaction.findOne({ _id: transactionId, isPaid: false })
                     await User.updateOne({ _id: transaction.userId }, { $inc: { credits: transaction.credits } })
                     transaction.isPaid = true
                     await transaction.save()
-                           const purchaseData = await Purchase.findById('6aeb8eea68d5597ad9b5ba7d')
-            
-            
-            
-            
-            
-            
-            
-            purchaseData.status = 'completed'
-            await purchaseData.save()
                 } else {
                     return response.json({received:true, message:'ignored event invalid app'})
                 }

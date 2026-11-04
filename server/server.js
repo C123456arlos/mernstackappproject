@@ -11,7 +11,7 @@ import dns from "node:dns/promises"
 dns.setServers(["1.1.1.1"])
 const app = express()
 await connectDB()
-app.post('/api/stripe',express.raw({type:'application/json'}), stripeWebhooks)
+app.use('/api/stripe',express.raw({type:'application/json'}), stripeWebhooks)
 app.use(cors())
 app.use(express.json())
 app.get('/', (req, res) => res.send('server is live'))
