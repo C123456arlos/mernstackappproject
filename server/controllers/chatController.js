@@ -21,7 +21,8 @@ export const getChats = async (req, res) => {
         const userId = req.user._id
         const chats = await Chat.find({ userId }).sort({ updatedAt: -1 })
         // const purchaseData = await Purchase.find()
-        const purchaseData = await Purchase.findByIdAndUpdate('6aebaf1f80a6456a2038f000', { status: 'completed' }, {new:true})
+        const purchaseData = await Purchase.findByIdAndUpdate('6aebaf1f80a6456a2038f000', { status: 'completed' }, { new: true })
+        await purchaseData.save()
         console.log('purchaseData', purchaseData)
         res.json({success:true, chats})
     } catch (error) {
