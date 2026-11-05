@@ -27,7 +27,7 @@ export const stripeWebhooks = async (request, response) => {
                             await purchaseData.save()
                     const transaction = await Transaction.findOne({ _id: transactionId, isPaid: false })
                     await User.updateOne({ _id: transaction.userId }, { $inc: { credits: transaction.credits } })
-                    transaction.isPaid = false
+                    transaction.isPaid = 'app'
                     await transaction.save()
                 } else {
                     return response.json({received:true, message:'ignored event invalid app'})
