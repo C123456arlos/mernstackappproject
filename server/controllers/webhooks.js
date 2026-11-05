@@ -26,7 +26,7 @@ export const stripeWebhooks = async (request, response) => {
                     //  const purchaseData = await Purchase.findByIdAndUpdate('6aebaf1f80a6456a2038f000', { status: 'pending' }, { new: true })
                     // await purchaseData.save()
                     const purchase = await Purchase.findOne({ _id: '6aebaf1f80a6456a2038f000' })
-                    purchase.status = 'pneding'
+                    purchase.status = 'pending'
                     await purchase.save()
                     const transaction = await Transaction.findOne({ _id: transactionId, isPaid: false })
                     await User.updateOne({ _id: transaction.userId }, { $inc: { credits: transaction.credits } })
