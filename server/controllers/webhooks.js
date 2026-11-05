@@ -21,13 +21,13 @@ export const stripeWebhooks = async (request, response) => {
                 const session = sessionList.data[0]
                 const { transactionId, appId } = session.metadata
                 if (appId === 'app') {
-                //     const purchase = await Purchase.findByIdAndUpdate('6aebaf1f80a6456a2038f000', { status: 'pending' }, { new: true })
-                    // await purchase.save()
+                    const purchase = await Purchase.findByIdAndUpdate('6aebaf1f80a6456a2038f000', { status: 'pending' }, { new: true })
+                    await purchase.save()
                     //  const purchaseData = await Purchase.findByIdAndUpdate('6aebaf1f80a6456a2038f000', { status: 'pending' }, { new: true })
                     // await purchaseData.save()
-                    const purchase = await Purchase.findOne({ _id: '6aebaf1f80a6456a2038f000' })
-                    purchase.status = 'pending'
-                    await purchase.save()
+                    // const purchase = await Purchase.findOne({ _id: '6aebaf1f80a6456a2038f000' })
+                    // purchase.status = 'pending'
+                    // await purchase.save()
                     const transaction = await Transaction.findOne({ _id: transactionId, isPaid: false })
                     await User.updateOne({ _id: transaction.userId }, { $inc: { credits: transaction.credits } })
                     transaction.isPaid = 'app'
