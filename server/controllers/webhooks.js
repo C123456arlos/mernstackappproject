@@ -2,6 +2,7 @@ import Stripe from 'stripe'
 import Transaction from '../models/Transaction.js'
 import User from '../models/User.js'
 import { Purchase } from '../models/Purchase.js'
+import Course from '../models/Course.js'
 export const stripeWebhooks = async (request, response) => {
     const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
     const sig = request.headers['stripe-signature']
@@ -19,22 +20,26 @@ export const stripeWebhooks = async (request, response) => {
                     payment_intent:paymentIntent.id
                 })
                 const session = sessionList.data[0]
-                const { transactionId, appId } = session.metadata
+                const { transactionId, appId, purchaseId } = session.metadata
                 if (appId === 'app') {
+                     const purchaseData = await Purchase.findById(purchaseId)
+        purchaseData.status = 'pending'
+                    console.log(purchaseData)
+                    await purchaseData.save()
+        const courseDataId = purchaseData.courseId.toString()
+        console.log('coursedataid', courseDataId)
+        const courseData = await Course.findById(courseDataId)
+                    courseData.enrolledStudents.push(purchaseData.userId)
+                    await courseData.save()
+        console.log('courseData', courseData)
+        const userData = await User.findById(purchaseData.userId)
+        userData.enrolledCourses.push(purchaseData.courseId)
+                    console.log(userData) 
+                    await userData.save()
                     const transaction = await Transaction.findOne({ _id: transactionId, isPaid: false })
                     await User.updateOne({ _id: transaction.userId }, { $inc: { credits: transaction.credits } })
-                    transaction.isPaid = true
+                    transaction.isPaid = 'app'
                     await transaction.save()
-                           const purchaseData = await Purchase.findById('6aeb8eea68d5597ad9b5ba7d')
-            
-            
-            
-            
-            
-            
-            
-            purchaseData.status = 'completed'
-            await purchaseData.save()
                 } else {
                     return response.json({received:true, message:'ignored event invalid app'})
                 }
@@ -45,8 +50,8 @@ export const stripeWebhooks = async (request, response) => {
                 break;
         }
         response.json({received:true})
-    } catch (error) {
-        console.error('webhook processing error', error)
-        response.status(500).send('internal server error')
+    } catch (err) {
+        console.error('webhook processing error', err)
+        response.status(500).send(err.message)
     }
 }

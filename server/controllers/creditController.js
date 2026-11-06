@@ -1,5 +1,9 @@
+import { Purchase } from "../models/Purchase.js"
 import Transaction from "../models/Transaction.js"
+import jwt from 'jsonwebtoken'
 import Stripe from 'stripe'
+import User from "../models/User.js"
+import Course from "../models/Course.js"
 const plans = [
         {
         _id: "basic",
@@ -33,12 +37,38 @@ export const getPlans = async (req, res) => {
 const stripe= new Stripe(process.env.STRIPE_SECRET_KEY)
 export const purchasePlan = async (req, res) => {
     try {
+      
+
+      
+
+
+
+
+        const {courseId}= req.body
         const { planId } = req.body
         const userId = req.user._id
+        
         const plan = plans.find(plan => plan._id === planId)
         if (!plan) {
             return res.json({success:false, message:'invalid plan'})
         }
+        const dataPurchase = Purchase.findById('6aebaf1f80a6456a2038f000')
+        dataPurchase.status='pending'
+        const purchaseData = await Purchase.findOne({courseId})
+        console.log(purchaseData)
+                purchaseData.status = 'completed'
+                            console.log(purchaseData)
+                            await purchaseData.save()
+                const courseDataId = purchaseData.courseId.toString()
+                console.log('coursedataid', courseDataId)
+                const courseData = await Course.findById(courseDataId)
+                            courseData.enrolledStudents.push(purchaseData.userId)
+                            await courseData.save()
+                console.log('courseData', courseData)
+                const userData = await User.findById(purchaseData.userId)
+                userData.enrolledCourses.push(purchaseData.courseId)
+                            console.log(userData) 
+                            await userData.save()
         const transaction = await Transaction.create({
             userId: userId,
             planId: plan._id,
@@ -46,6 +76,9 @@ export const purchasePlan = async (req, res) => {
             credits: plan.credits,
             isPaid:false
         })
+        // console.log(purchaseData)
+        // const date = Date.now()
+        // console.log(date)
         const {origin} = req.headers
         const session = await stripe.checkout.sessions.create({
             line_items: [
@@ -63,8 +96,8 @@ export const purchasePlan = async (req, res) => {
             mode:'payment',
             success_url:`${origin}/loading`,
             cancel_url:`${origin}`,
-            metadata:{transactionId:transaction._id.toString(), appId:'app'},
-            expires_at:Math.floor(Date.now()/ 1000)+30*60
+            metadata:{transactionId:transaction._id.toString(), appId:'app', purchaseId:purchaseData._id.toString()},
+            // expires_at: Math.floor(Date.now() / 1000) + 30 * 60
         })
         res.json({success:true, url:session.url})
     } catch (error) {
