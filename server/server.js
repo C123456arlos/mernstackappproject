@@ -73,6 +73,7 @@ app.use('/api/user', userAuthRouter)
 // app.use('/api/stripe', express.raw({ type: 'application/json' }), stripeWebhooks)
 app.use('/api/user', userRouter)
 
+
 const PORT = process.env.PORT || 3000
 app.listen(PORT, () => console.log(`server running on port ${PORT}`))
 
