@@ -1,54 +1,128 @@
 
+// import stripe from 'stripe'
+// import {User} from '../models/User.js'
+// import { Webhook } from 'svix'
+// import { Purchase } from '../models/Purchase.js'
+// import Course from '../models/Course.js'
+// const clerkWebhooks = async (req, res) => {
+//     console.log('dataclerk ', req.headers)
+//     try {
+//         const whook = new Webhook(process.env.CLERK_WEBHOOK_SECRET)
+//         const headers = {
+//             'svix-id': req.headers['svix-id'],
+//             'svix-signature': req.headers['svix-signature'],
+//             'svix-timestamp': req.headers['svix-timestamp']
+//         }
+//         await whook.verify(JSON.stringify(req.body), headers)
+//         const { data, type } = req.body
+//         switch (type) {
+//             case 'user.created': {
+//                 const userData = {
+//                     _id: data.id,
+//                     email: data.email_addresses[0].email_address,
+//                     username: data.first_name + '' + data.last_name,
+//                     image: data.image_url,
+//                 }
+//                 await User.create(userData)
+//                 break;
+//             }
+//             case 'user.updated': {
+//                 const userData = {
+//                     _id: data.id,
+//                     email: data.email_addresses[0].email_address,
+//                     username: data.first_name + '' + data.last_name,
+//                     image: data.image_url,
+//                 }
+//                 await User.findByIdAndUpdate(data.id, userData)
+//                 break;
+//             }
+//             case 'user.deleted': {
+//                 await User.findByIdAndDelete(data.id)
+//                 break;
+//             }
+//             default:
+//                 break;
+//         }
+//         res.json({ success: true, message: 'webhook received' })
+//     } catch (error) {
+//         console.log(error.message)
+//         res.json({ success: false, message: error.message })
+//     }
+// }
+// export default clerkWebhooks
+
 import stripe from 'stripe'
 import {User} from '../models/User.js'
 import { Webhook } from 'svix'
 import { Purchase } from '../models/Purchase.js'
 import Course from '../models/Course.js'
-const clerkWebhooks = async (req, res) => {
+
+export const clerkWebhooks = async (req, res) => {
     try {
         const whook = new Webhook(process.env.CLERK_WEBHOOK_SECRET)
-        const headers = {
+        console.log(whook)
+        await whook.verify(JSON.stringify(req.body), {
             'svix-id': req.headers['svix-id'],
-            'svix-signature': req.headers['svix-signature'],
-            'svix-timestamp': req.headers['svix-timestamp']
-        }
-        await whook.verify(JSON.stringify(req.body), headers)
+            'svix-timestamp': req.headers['svix-timestamp'],
+            'svix-signature':req.headers['svix-signature']
+        })
+        console.log('verify', verify)
         const { data, type } = req.body
+        console.log(data, 'data')
         switch (type) {
             case 'user.created': {
                 const userData = {
                     _id: data.id,
                     email: data.email_addresses[0].email_address,
-                    username: data.first_name + '' + data.last_name,
+                    name: data.first_name + ' ' + data.last_name,
                     image: data.image_url,
+                    resume:''
                 }
                 await User.create(userData)
+                res.json({})
                 break;
             }
             case 'user.updated': {
                 const userData = {
-                    _id: data.id,
                     email: data.email_addresses[0].email_address,
-                    username: data.first_name + '' + data.last_name,
-                    image: data.image_url,
+                    name: data.first_name + ' ' + data.last_name,
+                    image:data.image_url
                 }
                 await User.findByIdAndUpdate(data.id, userData)
+                res.json({})
                 break;
             }
             case 'user.deleted': {
                 await User.findByIdAndDelete(data.id)
+                res.json({})
                 break;
             }
             default:
                 break;
         }
-        res.json({ success: true, message: 'webhook received' })
     } catch (error) {
         console.log(error.message)
-        res.json({ success: false, message: error.message })
+        res.json({success:false, message:'webhooks error'})
     }
 }
-export default clerkWebhooks
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // export const stripeWebhooks = async (request, response) => {
 //     console.log('request stripe', request)

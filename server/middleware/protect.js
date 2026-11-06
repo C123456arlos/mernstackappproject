@@ -45,7 +45,8 @@ export const protect = async (req, res, next) => {
                 clerkUserId: userId,
             },
             {
-                clerkUserId: userId,
+                
+                
                 email,
                 image,
                 name: name

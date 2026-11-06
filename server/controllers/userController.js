@@ -7,9 +7,9 @@ export const getUserData = async (req, res) => {
     try {
         const clerkId = req.auth.userId
         const userId = await User.findOne({clerkId})
-        console.log('id', userId)
+        
         const id = userId._id
-        console.log('id', id)
+        
         // console.log(req.auth)
         // console.log('courseData', course)
         // console.log('userId', userId)
@@ -17,8 +17,7 @@ export const getUserData = async (req, res) => {
         const user = await User.findById(id)
         // const course = await Course.findById('6ae8f4d32d2bb7ac2eccef78')
         // console.log('course', course)
-        console.log('user', user)
-        console.log('user', user)
+        
         if (!user) {
             return res.json({success:false, message:'user not found'})
         }
@@ -111,7 +110,9 @@ export const getUserData = async (req, res) => {
 export const userEnrolledCourses = async (req, res) => {
     try {
         const userId = req.auth.userId
-        const userData = await User.findById(userId).populate('enrolledCourses')
+        
+        const userData = await User.findById({userId})
+        // const userData = await User.findById(userId).populate('enrolledCourses')
         res.json({success:true, enrolledCourses:userData.enrolledCourses})
     } catch (error) {
         res.json({success:false, message:error.message})
