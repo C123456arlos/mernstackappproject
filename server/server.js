@@ -45,7 +45,7 @@ import cors from 'cors'
 import connectDB from './configs/db.js'
 import { clerkMiddleware } from '@clerk/express'
 
-import { clerkWebhooks } from './controllers/webhooks.js'
+import { clerkWebhooks } from './controllers/clerkWebhooks.js'
 import  { stripeWebhooks } from './controllers/clerkWebhooks.js'
 import userRouter from './routes/userRoute.js'
 import dns  from "node:dns/promises"
