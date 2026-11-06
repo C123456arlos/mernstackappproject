@@ -229,7 +229,7 @@ export const stripeWebhooks = async (request, response) => {
             })
             const { purchaseId } = session.data[0].metadata
             const purchaseData = await Purchase.findById(purchaseId)
-                  purchaseData.status = 'pending'
+                  purchaseData.status = 'completed'
                               console.log(purchaseData)
                               await purchaseData.save()
                   const courseDataId = purchaseData.courseId.toString()
