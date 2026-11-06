@@ -188,12 +188,14 @@ export const purchaseCourse = async (req, res) => {
         }
         const purchaseData = {
             courseId: courseData._id,
-            userId:user._id,
+            userId:clerkUserId,
             amount: (courseData.coursePrice - courseData.discount * courseData.coursePrice / 100).toFixed(2)
         }
         const newPurchase = await Purchase.create(purchaseData)
         const stripeInstance = new Stripe(process.env.STRIPE_SECRET_KEY)
         const currency = process.env.CURRENCY.toLowerCase()
+        const purchaseDataNew = await Purchase.findById(newPurchase._id.toString())
+        console.log(purchaseDataNew.userId)
         const line_items = [{
             price_data: {
                 currency,
@@ -205,11 +207,11 @@ export const purchaseCourse = async (req, res) => {
             },
             quantity:1
         }]
-              const stripeSession = await stripeInstance.checkout.sessions.list({
-                payment_intent:'pi_3UYl7qIHXFA0eb7y1xlEMvBm'
-              })
-        console.log(stripeSession.data[0].metadata)
-        console.log('stripeSession', stripeSession)
+
+    
+
+        
+        
         const session = await stripeInstance.checkout.sessions.create({
             success_url: `${origin}/loading/my-enrollments`,
             cancel_url: `${origin}/`,
