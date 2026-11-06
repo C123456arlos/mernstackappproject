@@ -227,8 +227,7 @@ export const stripeWebhooks = async (request, response) => {
             const session = await stripeInstance.checkout.sessions.list({
                 payment_intent:paymentIntentId
             })
-            // const { purchaseId } = session.data[0].metadata
-            const {  purchaseId } = session.metadata
+            const { purchaseId } = session.data[0].metadata
             const purchaseData = await Purchase.findById(purchaseId)
                   purchaseData.status = 'pending'
                               console.log(purchaseData)
