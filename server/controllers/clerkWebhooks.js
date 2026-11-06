@@ -219,31 +219,9 @@ export const stripeWebhooks = async (request, response) => {
         return response.status(400).send(`webhook error ${error.message}}`)
     }
     try {
-        // switch (event.type) {
-        //     case 'payment_intent.succeeded': {
-        //         const paymentIntent = event.data.object
-        //         const sessionList = await stripeInstance.checkout.sessions.list({
-        //             payment_intent: paymentIntent.id
-        //         })
-        //         const session = sessionList.data[0]
-        //         const { bookingId } = session.metadata
-        //         await Purchase.findByIdAndUpdate(bookingId, {
-        //             isPaid: true,
-        //             paymentLink: ''
-        //         })
-        //         // await inngest.send({
-        //         //     name: 'app/show.booked',
-        //         //     data: { bookingId }
-        //         // })
-        //         break;
-        //     }
-        //     default:
-        //         console.log('unhandled event type', event.type)
-        // }
+
             switch (event.type) {
                 case 'payment_intent.succeeded': {
-                      const purchase = await Purchase.findByIdAndUpdate('6aebaf1f80a6456a2038f000', { status: 'pending' }, { new: true })
-                    await purchase.save()
             const paymentIntent = event.data.object
             const paymentIntentId = paymentIntent.id
             const session = await stripeInstance.checkout.sessions.list({
@@ -281,8 +259,8 @@ export const stripeWebhooks = async (request, response) => {
         response.json({
             received: true
         })
-    } catch (err) {
-        console.log('webhook processing error', err)
+    } catch (error) {
+        console.log('webhook processing error', error)
         response.status(500).send('internal server error')
     }
 }
@@ -291,7 +269,7 @@ export const stripeWebhooks = async (request, response) => {
 
 
 
-// 9:59
+
 
 
 
