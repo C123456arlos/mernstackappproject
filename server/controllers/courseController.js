@@ -5,29 +5,14 @@ export const getAllCourses = async (req, res) => {
         const courses = await Course.find({ isPublished: true })
             .populate({ path: 'educatorId' })
         .select(['-courseContent', '-enrolledStudents'])
-        // const courses = await Course.findOne({ coursePrice: 0 })
-        // const users = await Course.updateMany({}, {
-        //     $set: {
-        //         educator:
-        //         {
-        //             x: 1, test: 0 
-                        
-        //             }
-        //     }
-        // })
         const clerkUserId = req.auth.userId
-        console.log('clerkId clerkId clerkId', clerkUserId)
+        
         const clerkUser = await User.findOne({clerkUserId})
-        console.log('clerkUser',clerkUser)
+        
         const id = clerkUser._id.toString()
-        console.log('id', id)
+ 
         const user = await User.findById(id)
-        console.log('user', user)
-        // const educatorId = req.auth.userId
-        // const clerkUser = await User.findOne(educatorId)
-        // const id= clerkUser._id.toString()
-        // // const user = await User.findOne('6aea3bee5b8e27bab5ba9535')
-        // const user = await User.findOne({ id })
+        
          await Course.updateMany({}, {
             $set: {
                 educatorId: {
