@@ -254,7 +254,7 @@ export const stripeWebhooks = async (request, response) => {
             // await userData.save()
             // purchaseData.status = 'completed'
             // await purchaseData.save()
-            // break;
+            break;
         }
         case 'payment_intent.payment_failed': {
             const paymentIntent = event.data.object
