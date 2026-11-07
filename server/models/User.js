@@ -52,16 +52,16 @@ const userSchema = new mongoose.Schema({
         required: true,
         unique:true
     },
-    // resume: {
-    //     type: String
-    // },
-    // image: {
-    //     type: String, 
-    //     required:true
-    // },
-    enrolledCourses: {
-        type: String
-    }
+    image: {
+        type: String, 
+        required:true
+    },
+    enrolledCourses: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref:'Course'
+        }
+    ]
 })
 export const User = mongoose.model('User', userSchema)
 
