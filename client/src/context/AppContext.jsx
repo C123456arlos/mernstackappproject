@@ -21,8 +21,6 @@ export const AppProvider = ({ children }) => {
     const [enrolledCourses, setEnrolledCourses] = useState([])
     const [userData, setUserData]= useState(null)
 
-    
-
     const fetchAllCourses = async () => {
         try {
             const { data } = await axios.get(backendUrl + '/api/course/all')
@@ -45,6 +43,7 @@ export const AppProvider = ({ children }) => {
         }
         try {
             const token = await getToken()
+            console.log('token',token)
             const {data}=await axios.get(backendUrl + '/api/user/data', {
                 headers: {
                     Authorization:
