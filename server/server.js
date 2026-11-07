@@ -52,8 +52,8 @@ import dns  from "node:dns/promises"
 import educatorRouter from './routes/educatorRoute.js'
 import connectCloudinary from './configs/cloudinary.js'
 import courseRouter from './routes/courseRoute.js'
-import userAuthRouter from './routes/userRoutes.js'
-import { protect } from './middleware/protect.js'
+// import userAuthRouter from './routes/userRoutes.js'
+// import { protect } from './middleware/protect.js'
 dns.setServers(["1.1.1.1"])
 connectDB()
 await connectCloudinary()
@@ -71,9 +71,9 @@ app.use('/api/educator', express.json(), educatorRouter)
 app.use('/api/course', express.json(), courseRouter)
 app.get('/', (req, res) => res.send('server running'))
 // app.use('/api/user', educatorRouter)
-app.use('/api/user', protect)
+// app.use('/api/user', protect)
 app.use('/api/user', userRouter)
-app.use('/api/user', userAuthRouter)
+// app.use('/api/user', userAuthRouter)
 // app.use('/api/stripe', express.raw({ type: 'application/json' }), stripeWebhooks)
 app.use('/api/user', userRouter)
 
