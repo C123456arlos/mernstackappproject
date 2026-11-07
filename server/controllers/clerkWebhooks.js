@@ -86,17 +86,16 @@ export const stripeWebhooks = async (request, response) => {
                 payment_intent:paymentIntentId
             })
             const { purchaseId } = session.data[0].metadata
-            console.log('purchaseId', purchaseId)
             const purchaseData = await Purchase.findById(purchaseId)
-            console.log('purchaseData', purchaseData)
-            const userData = await User.findById(purchaseData.userId)
-            const courseData = await Course.findById(purchaseData.courseId.toString())
-            courseData.enrolledStudents.push(userData)
-            // await courseData.save()
-            userData.enrolledCourses.push(courseData._id)
-            // await userData.save()
-            purchaseData.status = 'completed'
-            // await purchaseData.save()
+                purchaseData.status = 'completed'
+                await purchaseData.save()
+                
+                const courseData= await Course.findById(purchaseData.courseId)
+                courseData.enrolledStudents.push(courseData.userId)
+                await courseData.save()
+                const userData = await User.findById(purchaseData.userId)
+                userData.enrolledCourses.push(courseData._id)
+            await userData.save()
             break;
         }
         case 'payment_intent.payment_failed': {

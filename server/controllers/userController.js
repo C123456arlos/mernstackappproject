@@ -194,26 +194,23 @@ export const purchaseCourse = async (req, res) => {
         const newPurchase = await Purchase.create(purchaseData)
         const stripeInstance = new Stripe(process.env.STRIPE_SECRET_KEY)
         const currency = process.env.CURRENCY.toLowerCase()
-
-
-
-      const sessionData = await stripeInstance.checkout.sessions.list({
-                payment_intent:'pi_3UZFz2IHXFA0eb7y0mFKUKdz'
-            })
-            const { purchaseId } = sessionData.data[0].metadata
-        console.log('purchaseId', purchaseId)
-        console.log('courseData', courseData)
-        console.log('userData', userData)
-            // const purchaseData = await Purchase.findById(purchaseId)
-            console.log('purchaseData', purchaseData)
-            // const userData = await User.findById(purchaseData.userId)
-            // const courseData = await Course.findById(purchaseData.courseId.toString())
-            courseData.enrolledStudents.push(userData)
-            await courseData.save()
-            userData.enrolledCourses.push(courseData._id)
-            await userData.save()
-            purchaseData.status = 'completed'
-            await purchaseData.save()
+        const newPurchaseData= await Purchase.findById(newPurchase._id)
+        
+        // const purchases = await Purchase.findById(purchaseData._id)
+        // console.log('courseData', courseData)
+        // console.log('userData', userData)
+        
+        
+        // console.log('purchases', purchases)
+        // console.log('purchaseData', purchaseData)
+        
+        // newPurchaseData.status = 'completed'
+        // await newPurchaseData.save()
+        // console.log('newPurchaseData', newPurchaseData)
+        // courseData.enrolledStudents.push(userData)
+        // await courseData.save()
+        // userData.enrolledCourses.push(courseData._id)
+        // await userData.save()
 
         const line_items = [{
             price_data: {
@@ -231,7 +228,7 @@ export const purchaseCourse = async (req, res) => {
             line_items: line_items,
             mode: 'payment',
             metadata: {
-                purchaseId:newPurchase._id.toString()
+                purchaseId:newPurchaseData._id.toString()
             }
         })
         console.log(newPurchase._id.toString())
