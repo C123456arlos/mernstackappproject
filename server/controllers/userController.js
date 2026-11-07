@@ -194,6 +194,11 @@ export const purchaseCourse = async (req, res) => {
         const newPurchase = await Purchase.create(purchaseData)
         const stripeInstance = new Stripe(process.env.STRIPE_SECRET_KEY)
         const currency = process.env.CURRENCY.toLowerCase()
+
+
+
+
+
         const line_items = [{
             price_data: {
                 currency,
@@ -213,6 +218,7 @@ export const purchaseCourse = async (req, res) => {
                 purchaseId:newPurchase._id.toString()
             }
         })
+        console.log(newPurchase._id.toString())
         res.json({success:true, session_url:session.url})
     } catch (error) {
         res.json({success:false, error:error.message})
