@@ -251,7 +251,7 @@
 import express from 'express'
 import cors from 'cors'
 import 'dotenv/config'
-import connectDB from './config/db.js'
+import connectDB from './configs/db.js'
 import { clerkWebhooks } from './controllers/clerkWebhooks.js'
 import {clerkMiddleware} from '@clerk/express'
 import dns from "node:dns/promises"
