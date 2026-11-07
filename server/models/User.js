@@ -52,16 +52,16 @@ const userSchema = new mongoose.Schema({
         required: true,
         unique:true
     },
-    resume: {
-        type: String
-    },
-    image: {
-        type: String, 
-        required:true
-    },
-    enrolledCourses: {
-        type: String
-    }
+    // resume: {
+    //     type: String
+    // },
+    // image: {
+    //     type: String, 
+    //     required:true
+    // },
+    // enrolledCourses: {
+    //     type: String
+    // }
 })
 export const User = mongoose.model('User', userSchema)
 
