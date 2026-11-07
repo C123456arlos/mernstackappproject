@@ -181,9 +181,7 @@ export const purchaseCourse = async (req, res) => {
         const { courseId } = req.body
         const { origin } = req.headers
         const clerkUserId = req.auth.userId
-        const user = await User.findOne({ clerkUserId })
-        const id = user._id.toString('')
-        const userData = await User.findById(id)
+        const userData = await User.findById(clerkUserId)
         const courseData = await Course.findById(courseId)
         if (!userData || !courseData) {
             return res.json({success:false, message:'data not found'})
@@ -196,24 +194,16 @@ export const purchaseCourse = async (req, res) => {
         const newPurchase = await Purchase.create(purchaseData)
         const stripeInstance = new Stripe(process.env.STRIPE_SECRET_KEY)
         const currency = process.env.CURRENCY.toLowerCase()
-        const purchaseDataNew = await Purchase.findById(newPurchase._id.toString())
-        console.log(purchaseDataNew.userId)
         const line_items = [{
             price_data: {
                 currency,
                 product_data: {
                     name: courseData.courseTitle
                 },
-                unit_amount:200
-                // unit_amount: Math.floor(newPurchase.amount) * 100
+                unit_amount: Math.floor(newPurchase.amount) * 100
             },
             quantity:1
         }]
-
-    
-
-        
-        
         const session = await stripeInstance.checkout.sessions.create({
             success_url: `${origin}/loading/my-enrollments`,
             cancel_url: `${origin}/`,
