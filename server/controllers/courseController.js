@@ -1,5 +1,5 @@
 import Course from "../models/Course.js"
-import  User  from "../models/User.js"
+import  {User}  from "../models/User.js"
 export const getAllCourses = async (req, res) => {
     try {
         const courses = await Course.find({ isPublished: true })
