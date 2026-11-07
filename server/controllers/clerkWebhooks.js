@@ -92,11 +92,11 @@ export const stripeWebhooks = async (request, response) => {
             const userData = await User.findById(purchaseData.userId)
             const courseData = await Course.findById(purchaseData.courseId.toString())
             courseData.enrolledStudents.push(userData)
-            await courseData.save()
+            // await courseData.save()
             userData.enrolledCourses.push(courseData._id)
-            await userData.save()
+            // await userData.save()
             purchaseData.status = 'completed'
-            await purchaseData.save()
+            // await purchaseData.save()
             break;
         }
         case 'payment_intent.payment_failed': {
