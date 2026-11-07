@@ -59,9 +59,9 @@ const userSchema = new mongoose.Schema({
     //     type: String, 
     //     required:true
     // },
-    // enrolledCourses: {
-    //     type: String
-    // }
+    enrolledCourses: {
+        type: String
+    }
 })
 export const User = mongoose.model('User', userSchema)
 
