@@ -12,7 +12,7 @@ import connectDB from './configs/db.js'
 import { clerkMiddleware } from '@clerk/express'
 
 import { clerkWebhooks } from './controllers/clerkWebhooks.js'
-import  { stripeWebhooks } from './controllers/clerkWebhooks.js'
+// import  { stripeWebhooks } from './controllers/clerkWebhooks.js'
 import userRouter from './routes/userRoute.js'
 import dns  from "node:dns/promises"
 import educatorRouter from './routes/educatorRoute.js'
@@ -26,7 +26,7 @@ await connectCloudinary()
 
 
 const app = express()
-app.use('/stripe', express.raw({type:'application/json'}), stripeWebhooks)
+// app.use('/stripe', express.raw({type:'application/json'}), stripeWebhooks)
 app.use(cors())
 app.use(express.json())
 app.use(clerkMiddleware())
