@@ -1,4 +1,4 @@
-
+// https://app-2gnxy.sevalla.app/api/payment/webhook
 
 
 
@@ -284,7 +284,7 @@ app.use('/api/stripe', express.json(), (req, res) => {
     try {
         event = stripe.webhooks.constructEvent(req.body, sig, 'whsec_NqQP0hfnCvOzNZO2b9BowWMZsbNf5N4B')
     } catch (error) {
-        console.error('webhook signature verification failed', err.message)
+        console.error('webhook signature verification failed', error.message)
         return res.status(400).send(`webhook error ${err.message}`)
     }
     if (event.type === 'payment_intent.succeeded') {
