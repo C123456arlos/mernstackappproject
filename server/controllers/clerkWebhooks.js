@@ -61,7 +61,7 @@ export const clerkWebhooks = async (req, res) => {
     }
 }
 
-const payload = {
+const body = {
   "id": "evt_3UZSczIHXFA0eb7y1KNOpUqR",
   "object": "event",
   "api_version": "2025-11-17.clover",
@@ -149,7 +149,7 @@ export const stripeWebhooks = async (request, response) => {
     const sig = request.headers['stripe-signature']
     // const payload = request.body.toString()
     // const body= request.body
-    // const payload = JSON.stringify(body)
+    const payload = JSON.stringify(body)
     let event
     try {
         // event= stripe.webhooks.constructEvent(request.body, sig, process.env.STRIPE_WEBHOOK_SECRET)
