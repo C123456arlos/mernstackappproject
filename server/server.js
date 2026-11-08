@@ -368,7 +368,7 @@ const body={
   },
   "type": "payment_intent.succeeded"
 }
-app.use('/api/stripe', express.json(), (req, res) => {
+app.use('/api/stripe', express.raw({ type: 'application/json' }), (req, res) => {
      const sig = req.headers['stripe-signature']
     let event
     try {
