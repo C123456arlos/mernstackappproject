@@ -369,10 +369,11 @@ const body={
   "type": "payment_intent.succeeded"
 }
 app.use('/api/stripe', express.raw({ type: 'application/json' }), (req, res) => {
-     const sig = req.headers['stripe-signature']
+    const sig = req.headers['stripe-signature']
+    const payload = body.toString()
     let event
     try {
-        event = stripe.webhooks.constructEvent(body, sig, 'whsec_NqQP0hfnCvOzNZO2b9BowWMZsbNf5N4B')
+        event = stripe.webhooks.constructEvent(payload, sig, 'whsec_NqQP0hfnCvOzNZO2b9BowWMZsbNf5N4B')
     } catch (error) {
         console.error('webhook signature verification failed', error.message)
         return res.status(400).send(`webhook error ${error.message}`)
