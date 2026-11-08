@@ -278,98 +278,99 @@ app.use('/api/educator', express.json(), educatorRouter)
 app.use('/api/course', express.json(), courseRouter)
 // app.use('/api/stripe', express.raw({ type: 'application/json' }), stripeWebhooks)
 // app.use('/api/stripe', express.json(), stripeWebhooks)
-const body={
-  "id": "evt_3UZTgcIHXFA0eb7y19ZA56G2",
-  "object": "event",
-  "api_version": "2025-11-17.clover",
-  "created": 1794135059,
-  "data": {
-    "object": {
-      "id": "pi_3UZTgcIHXFA0eb7y1lX7d5rH",
-      "object": "payment_intent",
-      "allowed_payment_method_types": [
-        "card",
-        "link"
-      ],
-      "amount": 100,
-      "amount_capturable": 0,
-      "amount_details": {
-        "tip": {}
-      },
-      "amount_received": 100,
-      "application": null,
-      "application_fee_amount": null,
-      "automatic_payment_methods": null,
-      "canceled_at": null,
-      "cancellation_reason": null,
-      "capture_method": "automatic_async",
-      "client_secret": "pi_3UZTgcIHXFA0eb7y1lX7d5rH_secret_321IuclMnoAY4WnscwqTNhBL9",
-      "confirmation_method": "automatic",
-      "created": 1794135058,
-      "currency": "usd",
-      "customer": null,
-      "customer_account": null,
-      "description": null,
-      "excluded_payment_method_types": null,
-      "last_payment_error": null,
-      "latest_charge": "ch_3UZTgcIHXFA0eb7y1kDr4bVU",
-      "livemode": false,
-      "managed_payments": {
-        "enabled": false
-      },
-      "metadata": {},
-      "next_action": null,
-      "on_behalf_of": null,
-      "payment_details": {
-        "customer_reference": null,
-        "order_reference": "cs_test_a1hqcBNFvEYbrNBzlmAPGzlTiIyJYUjYzFbvUIlfZ9WgSdOCvcQBRrwEVA"
-      },
-      "payment_method": "pm_1UZTgbIHXFA0eb7ybmLBDpK6",
-      "payment_method_configuration_details": null,
-      "payment_method_options": {
-        "card": {
-          "installments": null,
-          "mandate_options": null,
-          "network": null,
-          "request_three_d_secure": "automatic"
-        },
-        "link": {
-          "persistent_token": null
-        }
-      },
-      "payment_method_types": [
-        "card",
-        "link"
-      ],
-      "payment_record": null,
-      "presentment_details": {
-        "presentment_amount": 1237,
-        "presentment_currency": "bob"
-      },
-      "processing": null,
-      "receipt_email": null,
-      "review": null,
-      "setup_future_usage": null,
-      "shared_payment_granted_token": null,
-      "shipping": null,
-      "source": null,
-      "statement_descriptor": null,
-      "statement_descriptor_suffix": null,
-      "status": "succeeded",
-      "transfer_data": null,
-      "transfer_group": null
-    }
-  },
-  "livemode": false,
-  "pending_webhooks": 7,
-  "request": {
-    "id": null,
-    "idempotency_key": "30334e24-e168-4603-87cc-8534e96e8063"
-  },
-  "type": "payment_intent.succeeded"
-}
+// const body={
+//   "id": "evt_3UZTgcIHXFA0eb7y19ZA56G2",
+//   "object": "event",
+//   "api_version": "2025-11-17.clover",
+//   "created": 1794135059,
+//   "data": {
+//     "object": {
+//       "id": "pi_3UZTgcIHXFA0eb7y1lX7d5rH",
+//       "object": "payment_intent",
+//       "allowed_payment_method_types": [
+//         "card",
+//         "link"
+//       ],
+//       "amount": 100,
+//       "amount_capturable": 0,
+//       "amount_details": {
+//         "tip": {}
+//       },
+//       "amount_received": 100,
+//       "application": null,
+//       "application_fee_amount": null,
+//       "automatic_payment_methods": null,
+//       "canceled_at": null,
+//       "cancellation_reason": null,
+//       "capture_method": "automatic_async",
+//       "client_secret": "pi_3UZTgcIHXFA0eb7y1lX7d5rH_secret_321IuclMnoAY4WnscwqTNhBL9",
+//       "confirmation_method": "automatic",
+//       "created": 1794135058,
+//       "currency": "usd",
+//       "customer": null,
+//       "customer_account": null,
+//       "description": null,
+//       "excluded_payment_method_types": null,
+//       "last_payment_error": null,
+//       "latest_charge": "ch_3UZTgcIHXFA0eb7y1kDr4bVU",
+//       "livemode": false,
+//       "managed_payments": {
+//         "enabled": false
+//       },
+//       "metadata": {},
+//       "next_action": null,
+//       "on_behalf_of": null,
+//       "payment_details": {
+//         "customer_reference": null,
+//         "order_reference": "cs_test_a1hqcBNFvEYbrNBzlmAPGzlTiIyJYUjYzFbvUIlfZ9WgSdOCvcQBRrwEVA"
+//       },
+//       "payment_method": "pm_1UZTgbIHXFA0eb7ybmLBDpK6",
+//       "payment_method_configuration_details": null,
+//       "payment_method_options": {
+//         "card": {
+//           "installments": null,
+//           "mandate_options": null,
+//           "network": null,
+//           "request_three_d_secure": "automatic"
+//         },
+//         "link": {
+//           "persistent_token": null
+//         }
+//       },
+//       "payment_method_types": [
+//         "card",
+//         "link"
+//       ],
+//       "payment_record": null,
+//       "presentment_details": {
+//         "presentment_amount": 1237,
+//         "presentment_currency": "bob"
+//       },
+//       "processing": null,
+//       "receipt_email": null,
+//       "review": null,
+//       "setup_future_usage": null,
+//       "shared_payment_granted_token": null,
+//       "shipping": null,
+//       "source": null,
+//       "statement_descriptor": null,
+//       "statement_descriptor_suffix": null,
+//       "status": "succeeded",
+//       "transfer_data": null,
+//       "transfer_group": null
+//     }
+//   },
+//   "livemode": false,
+//   "pending_webhooks": 7,
+//   "request": {
+//     "id": null,
+//     "idempotency_key": "30334e24-e168-4603-87cc-8534e96e8063"
+//   },
+//   "type": "payment_intent.succeeded"
+// }
 app.use('/api/stripe', express.raw({ type: 'application/json' }), (req, res) => {
     const sig = req.headers['stripe-signature']
+    const body = req.body
     const payload = body.toString()
     let event
     try {
