@@ -195,23 +195,6 @@ export const purchaseCourse = async (req, res) => {
         const stripeInstance = new Stripe(process.env.STRIPE_SECRET_KEY)
         const currency = process.env.CURRENCY.toLowerCase()
         const newPurchaseData= await Purchase.findById(newPurchase._id)
-        
-        // const purchases = await Purchase.findById(purchaseData._id)
-        // console.log('courseData', courseData)
-        // console.log('userData', userData)
-        
-        
-        // console.log('purchases', purchases)
-        // console.log('purchaseData', purchaseData)
-        
-        // newPurchaseData.status = 'completed'
-        // await newPurchaseData.save()
-        // console.log('newPurchaseData', newPurchaseData)
-        // courseData.enrolledStudents.push(userData)
-        // await courseData.save()
-        // userData.enrolledCourses.push(courseData._id)
-        // await userData.save()
-
         const line_items = [{
             price_data: {
                 currency,
