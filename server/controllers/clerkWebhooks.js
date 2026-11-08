@@ -1,7 +1,7 @@
 
 
 
-// https://app-2gnxy.sevalla.app/api/payment/webhook
+
 
 
 
@@ -75,7 +75,7 @@ const body = {
         "card",
         "link"
       ],
-      "amount": 100,
+      "amount": 200,
       "amount_capturable": 0,
       "amount_details": {
         "tip": {}
