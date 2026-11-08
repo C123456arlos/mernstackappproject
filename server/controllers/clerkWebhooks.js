@@ -61,7 +61,88 @@ export const clerkWebhooks = async (req, res) => {
     }
 }
 
-
+const payload = {
+  "id": "evt_3UZSczIHXFA0eb7y1KNOpUqR",
+  "object": "event",
+  "api_version": "2025-11-17.clover",
+  "created": 1794130989,
+  "data": {
+    "object": {
+      "id": "pi_3UZSczIHXFA0eb7y1HHiKwBN",
+      "object": "payment_intent",
+      "allowed_payment_method_types": [
+        "card",
+        "link"
+      ],
+      "amount": 100,
+      "amount_capturable": 0,
+      "amount_details": {
+        "tip": {}
+      },
+      "amount_received": 0,
+      "application": null,
+      "application_fee_amount": null,
+      "automatic_payment_methods": null,
+      "canceled_at": null,
+      "cancellation_reason": null,
+      "capture_method": "automatic_async",
+      "client_secret": "pi_3UZSczIHXFA0eb7y1HHiKwBN_secret_wNV4T3gJMSpmxnsE7gbi4KyTb",
+      "confirmation_method": "automatic",
+      "created": 1794130989,
+      "currency": "usd",
+      "customer": null,
+      "customer_account": null,
+      "description": null,
+      "excluded_payment_method_types": null,
+      "last_payment_error": null,
+      "latest_charge": null,
+      "livemode": false,
+      "managed_payments": {
+        "enabled": false
+      },
+      "metadata": {},
+      "next_action": null,
+      "on_behalf_of": null,
+      "payment_method": null,
+      "payment_method_configuration_details": null,
+      "payment_method_options": {
+        "card": {
+          "installments": null,
+          "mandate_options": null,
+          "network": null,
+          "request_three_d_secure": "automatic"
+        },
+        "link": {
+          "persistent_token": null
+        }
+      },
+      "payment_method_types": [
+        "card",
+        "link"
+      ],
+      "payment_record": null,
+      "processing": null,
+      "receipt_email": null,
+      "review": null,
+      "setup_future_usage": null,
+      "shared_payment_granted_token": null,
+      "shipping": null,
+      "source": null,
+      "statement_descriptor": null,
+      "statement_descriptor_suffix": null,
+      "status": "requires_payment_method",
+      "transfer_data": null,
+      "transfer_group": null
+    }
+  },
+  "livemode": false,
+  "pending_webhooks": 1,
+  "request": {
+    "id": null,
+    "idempotency_key": "a69262da-0a37-4358-9d6f-f2d37e157e58"
+  },
+  "type": "payment_intent.created"
+}
 export const stripeWebhooks = async (request, response) => {
     console.log('request stripe', request)
     const stripeInstance=new stripe(process.env.STRIPE_SECRET_KEY)
