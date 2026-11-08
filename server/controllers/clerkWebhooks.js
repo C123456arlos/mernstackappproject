@@ -62,148 +62,133 @@ export const clerkWebhooks = async (req, res) => {
     }
 }
 
-const body = {
-  "id": "evt_3UZSczIHXFA0eb7y1KNOpUqR",
-  "object": "event",
-  "api_version": "2025-11-17.clover",
-  "created": 1794130989,
-  "data": {
-    "object": {
-      "id": "pi_3UZSczIHXFA0eb7y1HHiKwBN",
-      "object": "payment_intent",
-      "allowed_payment_method_types": [
-        "card",
-        "link"
-      ],
-      "amount": 200,
-      "amount_capturable": 0,
-      "amount_details": {
-        "tip": {}
-      },
-      "amount_received": 0,
-      "application": null,
-      "application_fee_amount": null,
-      "automatic_payment_methods": null,
-      "canceled_at": null,
-      "cancellation_reason": null,
-      "capture_method": "automatic_async",
-      "client_secret": "pi_3UZSczIHXFA0eb7y1HHiKwBN_secret_wNV4T3gJMSpmxnsE7gbi4KyTb",
-      "confirmation_method": "automatic",
-      "created": 1794130989,
-      "currency": "usd",
-      "customer": null,
-      "customer_account": null,
-      "description": null,
-      "excluded_payment_method_types": null,
-      "last_payment_error": null,
-      "latest_charge": null,
-      "livemode": false,
-      "managed_payments": {
-        "enabled": false
-      },
-      "metadata": {},
-      "next_action": null,
-      "on_behalf_of": null,
-      "payment_method": null,
-      "payment_method_configuration_details": null,
-      "payment_method_options": {
-        "card": {
-          "installments": null,
-          "mandate_options": null,
-          "network": null,
-          "request_three_d_secure": "automatic"
-        },
-        "link": {
-          "persistent_token": null
-        }
-      },
-      "payment_method_types": [
-        "card",
-        "link"
-      ],
-      "payment_record": null,
-      "processing": null,
-      "receipt_email": null,
-      "review": null,
-      "setup_future_usage": null,
-      "shared_payment_granted_token": null,
-      "shipping": null,
-      "source": null,
-      "statement_descriptor": null,
-      "statement_descriptor_suffix": null,
-      "status": "requires_payment_method",
-      "transfer_data": null,
-      "transfer_group": null
-    }
-  },
-  "livemode": false,
-  "pending_webhooks": 1,
-  "request": {
-    "id": null,
-    "idempotency_key": "a69262da-0a37-4358-9d6f-f2d37e157e58"
-  },
-  "type": "payment_intent.created"
-}
+
+// export const stripeWebhooks = async (request, response) => {
+//     console.log('request stripe', request)
+//     const stripeInstance=new stripe(process.env.STRIPE_SECRET_KEY)
+//     const sig = request.headers['stripe-signature']
+//     // const payload = request.body.toString()
+//     // const body= request.body
+//     // const payload = JSON.stringify(body)
+//     let event
+//     try {
+//         // event= stripe.webhooks.constructEvent(request.body, sig, process.env.STRIPE_WEBHOOK_SECRET)
+//         event= stripe.webhooks.constructEvent(payload, sig, 'whsec_NqQP0hfnCvOzNZO2b9BowWMZsbNf5N4B')
+//         // event= stripe.webhooks.constructEvent(body, sig, 'whsec_ucl1DmzUgj7TFdcVy1TRIxLhFKKuRBbh')
+//     } catch (error) {
+//          console.log('stripe error', error)
+//         response.status(400).send(`webhook event error ${error.message}`)
+//     }
+//     try {
+//     switch (event.type) {
+//         case 'payment_intent.succeeded': {
+//             const paymentIntent = event.data.object
+//             const paymentIntentId = paymentIntent.id
+//             const session = await stripeInstance.checkout.sessions.list({
+//                 payment_intent:paymentIntentId
+//             })
+//             const { purchaseId } = session.data[0].metadata
+            // const purchaseData = await Purchase.findById(purchaseId)
+            //     purchaseData.status = 'completed'
+            //     await purchaseData.save()
+                
+//                 const courseData= await Course.findById(purchaseData.courseId)
+//                 courseData.enrolledStudents.push(courseData.userId)
+//                 await courseData.save()
+//                 const userData = await User.findById(purchaseData.userId)
+//                 userData.enrolledCourses.push(courseData._id)
+//             await userData.save()
+//             break;
+//         }
+//         case 'payment_intent.payment_failed': {
+//             const paymentIntent = event.data.object
+//             const paymentIntentId = paymentIntent.id
+//             const session = await stripeInstance.checkout.sessions.list({
+//                 payment_intent:paymentIntentId
+//             })
+//             const { purchaseId } = session.data[0].metadata
+//             const purchaseData = await Purchase.findById(purchaseId)
+//             purchaseData.status = 'failed'
+//             await purchaseData.save()
+//             break;
+//         }
+//         default:
+//             console.log(`unhandled event type ${event.type}`)
+//     }
+//         response.json({ received: true })
+//     } catch (error) {
+//         console.log('stripe error', error)
+//         response.status(400).send(`webhook err ${error.message}`)
+//     }
+// }
+
+
+import stripe from 'stripe'
+
+import { Purchase } from '../models/Purchase.js'
+
 export const stripeWebhooks = async (request, response) => {
-    console.log('request stripe', request)
-    const stripeInstance=new stripe(process.env.STRIPE_SECRET_KEY)
+    console.log(request, 'request from stripewebhooks')
+    const stripeInstance = new stripe(process.env.STRIPE_SECRET_KEY)
     const sig = request.headers['stripe-signature']
-    // const payload = request.body.toString()
-    // const body= request.body
-    // const payload = JSON.stringify(body)
     let event
     try {
-        // event= stripe.webhooks.constructEvent(request.body, sig, process.env.STRIPE_WEBHOOK_SECRET)
-        event= stripe.webhooks.constructEvent(payload, sig, 'whsec_NqQP0hfnCvOzNZO2b9BowWMZsbNf5N4B')
-        // event= stripe.webhooks.constructEvent(body, sig, 'whsec_ucl1DmzUgj7TFdcVy1TRIxLhFKKuRBbh')
+        event = stripeInstance.webhooks.constructEvent(request.body, sig, 'whsec_QibV8vJroeRScGnM6INgPUqUkJkrpExy')
     } catch (error) {
-         console.log('stripe error', error)
-        response.status(400).send(`webhook event error ${error.message}`)
+        return response.status(400).send(`webhook error ${error.message}`)
     }
     try {
-    switch (event.type) {
-        case 'payment_intent.succeeded': {
-            const paymentIntent = event.data.object
-            const paymentIntentId = paymentIntent.id
-            const session = await stripeInstance.checkout.sessions.list({
-                payment_intent:paymentIntentId
-            })
-            const { purchaseId } = session.data[0].metadata
-            const purchaseData = await Purchase.findById(purchaseId)
+        switch (event.type) {
+            case 'payment_intent.succeeded': {
+                const paymentIntent = event.data.object
+                const sessionList = await stripeInstance.checkout.sessions.list({
+                    payment_intent: paymentIntent.id
+                })
+                const session = sessionList.data[0]
+                // const { purchaseId } = session.metadata
+                            const { purchaseId } = session.data[0].metadata
+                            const purchaseData = await Purchase.findById(purchaseId)
                 purchaseData.status = 'completed'
                 await purchaseData.save()
-                
-                const courseData= await Course.findById(purchaseData.courseId)
-                courseData.enrolledStudents.push(courseData.userId)
-                await courseData.save()
-                const userData = await User.findById(purchaseData.userId)
-                userData.enrolledCourses.push(courseData._id)
-            await userData.save()
-            break;
+                // await Booking.findByIdAndUpdate(bookingId, {
+                //     isPaid: true,
+                //     paymentLink: ''
+                // })
+
+                // await inngest.send({
+                //     name: 'app/show.booked',
+                //     data: { bookingId }
+                // })
+                break;
+            }
+            default:
+                console.log('unhandled event type', event.type)
         }
-        case 'payment_intent.payment_failed': {
-            const paymentIntent = event.data.object
-            const paymentIntentId = paymentIntent.id
-            const session = await stripeInstance.checkout.sessions.list({
-                payment_intent:paymentIntentId
-            })
-            const { purchaseId } = session.data[0].metadata
-            const purchaseData = await Purchase.findById(purchaseId)
-            purchaseData.status = 'failed'
-            await purchaseData.save()
-            break;
-        }
-        default:
-            console.log(`unhandled event type ${event.type}`)
-    }
-        response.json({ received: true })
+        //        case 'payment_intent.succeeded': {
+        //     const paymentIntent = event.data.object
+        //     const paymentIntentId = paymentIntent.id
+        //     const session = await stripeInstance.checkout.sessions.list({
+        //         payment_intent:paymentIntentId
+        //     })
+        //     const { purchaseId } = session.data[0].metadata
+        //     console.log('purchaseId', purchaseId)
+            // console.log('purchaseData', purchaseData)
+            // const userData = await User.findById(purchaseData.userId)
+            // const courseData = await Course.findById(purchaseData.courseId.toString())
+            // courseData.enrolledStudents.push(userData)
+            // await courseData.save()
+            // userData.enrolledCourses.push(courseData._id)
+            // await userData.save()
+        //     break;
+        // }
+        response.json({
+            received: true
+        })
     } catch (error) {
-        console.log('stripe error', error)
-        response.status(400).send(`webhook err ${error.message}`)
+        console.log('webhook processing error', err)
+        response.status(500).send(error.message)
     }
 }
-
-
 
 
 
