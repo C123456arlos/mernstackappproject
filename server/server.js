@@ -277,7 +277,36 @@ app.post('/webhooks', clerkWebhooks)
 app.use('/api/educator', express.json(), educatorRouter)
 app.use('/api/course', express.json(), courseRouter)
 // app.use('/api/stripe', express.raw({ type: 'application/json' }), stripeWebhooks)
-app.use('/api/stripe', express.json(), stripeWebhooks)
+// app.use('/api/stripe', express.json(), stripeWebhooks)
+app.use('/api/stripe', express.json(), (req, res) => {
+     const sig = req.headers['stripe-signature']
+    let event
+    try {
+        event = stripe.webhooks.constructEvent(req.body, sig, 'whsec_NqQP0hfnCvOzNZO2b9BowWMZsbNf5N4B')
+    } catch (error) {
+        console.error('webhook signature verification failed', err.message)
+        return res.status(400).send(`webhook error ${err.message}`)
+    }
+    if (event.type === 'payment_intent.succeeded') {
+        const paymentIntent = event.data.object
+        console.log('payment succeeded', paymentIntent.id)
+        try {
+            const { userId, clerkId, orderItems, shippingAddress, totalPrice } = paymentIntent.metadata
+            
+            if (existingOrder) {
+                console.log('order already exists for payment', paymentIntent.id)
+                return res.json({received:true})
+            }
+     
+     
+     
+            console.log('order created successfully', order._id)
+        } catch (error) {
+            console.error('error creating order from webhook', error)
+        }
+    }
+    res.json({received:true})
+})
 app.use('/api/user', userRouter)
 app.get('/', (req, res) => res.send('server running'))
 const PORT = process.env.PORT || 3000
