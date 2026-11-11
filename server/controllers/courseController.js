@@ -3,7 +3,7 @@ import  {User}  from "../models/User.js"
 export const getAllCourses = async (req, res) => {
     try {
         const courses = await Course.find({ isPublished: true })
-            .populate({ path: 'educatorId' })
+            .populate({ path: 'educator' })
         .select(['-courseContent', '-enrolledStudents'])
         const clerkUserId = req.auth.userId
         

@@ -5,19 +5,8 @@ import { User } from "../models/User.js"
 import Stripe from 'stripe'
 export const getUserData = async (req, res) => {
     try {
-        const clerkId = req.auth.userId
-        const userId = await User.findOne({clerkId})
-        
-        const id = userId._id
-        
-        // console.log(req.auth)
-        // console.log('courseData', course)
-        // console.log('userId', userId)
-        // const user = await User.findOne({userId})
-        const user = await User.findById(id)
-        // const course = await Course.findById('6ae8f4d32d2bb7ac2eccef78')
-        // console.log('course', course)
-        
+        const userId = req.auth.userId
+        const user = await User.findById(userId)
         if (!user) {
             return res.json({success:false, message:'user not found'})
         }
@@ -111,8 +100,8 @@ export const userEnrolledCourses = async (req, res) => {
     try {
         const userId = req.auth.userId
         
-        const userData = await User.findById({userId})
-        // const userData = await User.findById(userId).populate('enrolledCourses')
+        // const userData = await User.findById(userId)
+        const userData = await User.findById(userId).populate('enrolledCourses')
         res.json({success:true, enrolledCourses:userData.enrolledCourses})
     } catch (error) {
         res.json({success:false, message:error.message})
@@ -237,9 +226,9 @@ export const updateUserCourseProgress = async(req, res)=> {
                 userId, courseId, lectureCompleted:[lectureId]
             })
         }
-        res.json({sucecss:true, message:'progress updated'})
+        res.json({success:true, message:'progress updated'})
     } catch (error) {
-    res.json({success:false, message:error.message})
+    res.json({success:false, message:'error'})
     }
 }
 
@@ -247,7 +236,7 @@ export const getUserCourseProgress = async (req, res) => {
     try {
         const userId = req.auth.userId
         const { courseId, lectureId } = req.body
-        const progressData = await CourseProgress.findOne((userId, courseId))
+        const progressData = await CourseProgress.findOne({userId, courseId})
         res.json({success:true, progressData})
     } catch (error) {
         res.json({success:false, message:error.message})
