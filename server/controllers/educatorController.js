@@ -56,22 +56,25 @@ export const getEducatorCourses = async (req, res) => {
 export const educatorDashboardData = async (req, res) => {
     try {
         const educator = req.auth.userId
-        const courses = await Course.find({ educator })
+        let courses = await Course.find({ educator })
+        console.log('courses', courses)
         const totalCourses = courses.length
+        console.log('total', totalCourses)
         const courseIds = courses.map(course => course._id)
+        console.log('courseIds', courseIds)
         const purchases = await Purchase.find({
             courseId: { $in: courseIds },
             status:'completed'
         })
         const totalEarnings = purchases.reduce((sum, purchase) => sum + purchase.amount, 0)
         const enrolledStudentsData = []
-        for (course of courses) {
+        for (courses of courses) {
             const students = await User.find({
-                _id:{$in:course.enrolledStudents}
-            }, 'name imageUrl')
+                _id:{$in:courses.enrolledStudents}
+            }, 'name image')
             students.forEach(student => {
                 enrolledStudentsData.push({
-                    courseTitle: course.courseTitle,
+                    courseTitle: courses.courseTitle,
                     student
                 })
             })
@@ -93,7 +96,7 @@ export const getEnrolledStudentsData = async (req, res) => {
      const purchases = await Purchase.find({
          courseId: { $in: courseIds },
          status:'completed'
-     }).populate('userId', 'name imageUrl').populate('courseId', 'courseTitle')
+     }).populate('userId', 'name image').populate('courseId', 'courseTitle')
      const enrolledStudents = purchases.map(purchase => ({
          student: purchase.userId,
          courseTitle: purchase.courseId.courseTitle,

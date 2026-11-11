@@ -1,7 +1,10 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import uniqid from 'uniqid'
 import {assets} from '../../assets/assets'
 import Quill from 'quill'
+import { AppContext } from '../../context/AppContext'
+import { toast } from 'react-toastify'
+import axios from 'axios'
 const AddCourse = () => {
   const quillRef = useRef(null)
   const editorRef = useRef(null)
@@ -12,6 +15,7 @@ const AddCourse = () => {
   const [chapters, setChapters] = useState([])
   const [showPopup, setShowPopup] = useState(false)
   const [currentChapterId, setCurrentChapterId] = useState(null)
+  const {backendUrl, getToken}=useContext(AppContext)
   const [lectureDetails, setLectureDetails] = useState(
     {
       lectureTitle: '',
@@ -80,8 +84,38 @@ const AddCourse = () => {
     })
   }
   const handleSubmit = async (e) => {
-    e.preventDefault()
+    try {
+      e.preventDefault()
+      if (!image) {
+     toast.error('thumbnail not selected')
+      }
+      const courseData = {
+        courseTitle, courseDescription: quillRef.current.root.innerHTML,
+        coursePrice: Number(coursePrice), discount:Number(discount), courseContent:chapters
+      } 
+      const formData = new FormData()
+      formData.append('courseData', JSON.stringify(courseData))
+      formData.append('image', image)
+      const token = await getToken()
+      const { data } = await axios.post(backendUrl + '/api/educator/add-course',
+        formData, {headers:{Authorization:`Bearer ${token}`}}
+      )
+      if (data.success) {
+        toast.success(data.message)
+        setCourseTitle('')
+        setCoursePrice(0)
+        setDiscount(0)
+        setImage(null)
+        setChapters([])
+        quillRef.current.root.innerHTML=''
+      } else {
+        toast.error(data.message)
+      }
+    } catch (error) {
+      toast.error(error.message)
+    }
   }
+      
   useEffect(() => {
     if (!quillRef.current && editorRef.current) {
       quillRef.current = new Quill(editorRef.current, {
@@ -121,7 +155,7 @@ const AddCourse = () => {
         <div className='flex flex-col gap-1'>
           <p>discount</p>
           <input onChange={e => setDiscount(e.target.value)} value={discount} type='number' placeholder='0'
-            min={0} max={100} className='outline-none md:py-2.5 w-28 px-3 rounded border border-gray-500' 
+            min={0} max={100} className='outline-none py-2.5 w-28 px-3 rounded border border-gray-500' 
             required
           ></input>
         </div>
@@ -152,7 +186,7 @@ const AddCourse = () => {
             </div>
           ))}
           <div className='flex justify-center items-center bg-blue-100  p-2 rounded-lg cursor-pointer'
-          onClick={()=>handleChapter('add')}>add chapter</div>
+          onClick={()=>handleChapter('add')}>+ add chapter</div>
           {showPopup && (
             <div className='fixed inset-0 flex items-center  justify-center bg-gray-800 bg-opacity-50'>
             <div className='bg-gray-100 w-[350px] relative px-6 py-6'>

@@ -1,14 +1,33 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { dummyStudentEnrolled } from '../../assets/assets'
 import Loading from '../../components/student/Loading'
+import { AppContext } from '../../context/AppContext'
+import axios from 'axios'
+import toast from 'react-hot-toast'
 const StudentsEnrolled = () => {
   const [enrolledStudents, setEnrolledStudents] = useState(null)
+  const {backendUrl, getToken, isEducator}= useContext(AppContext)
   const fetchEnrolledStudents = async () => {
-    setEnrolledStudents(dummyStudentEnrolled)
+    try {
+      const token = await getToken()
+      const { data } = await axios.get(backendUrl + '/api/educator/enrolled-students', 
+        {headers:{Authorization:`Bearer ${token}`}}
+      )
+      if (data.success) {
+        setEnrolledStudents(data.enrolledStudents.reverse())
+      } else {
+        toast.error(data.message)
+      }
+    } catch (error) {
+      toast.error(error.message)
+    }
   }
   useEffect(() => {
-    fetchEnrolledStudents()
-  },[])
+    if (isEducator) {
+      fetchEnrolledStudents()
+    }
+  }, [isEducator])
+  console.log('enrolledStudents', enrolledStudents)
   return enrolledStudents ? (
     <div className='min-h-screen flex flex-col items-start justify-between md:p-8 md:pb-0 p-4 pt-8 pb-0'>
       <div className='flex flex-col items-center max-w-4xl w-full oveflow-hidden rounded-md bg-white border border-gray-500/20'>
@@ -26,8 +45,8 @@ const StudentsEnrolled = () => {
               <tr key={index} className='border-b border-gray-500/20'>
                 <td className='px-4 py-3 text-center hidden sm:table-cell'>{index + 1}</td>
                 <td className='md:px-4 px-2 py-3 flex items-center space-x-3'>
-                  <img src={item.student.imageUrl} alt='' className='w-9 h-9 rounded-full'></img>
-                  <span className='truncate'>{item.student.name}</span>
+                  <img src={item.student?.image} alt='' className='w-9 h-9 rounded-full'></img>
+                  <span className='truncate'>{item.student?.name}</span>
                 </td>
                 <td className='px-4 py-3 truncate'>{item.courseTitle}</td>
                 <td className='px-4 py-3 hidden sm:table-cell'>{new Date(item.purchaseDate).toLocaleDateString()}</td>
